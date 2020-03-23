@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>403</title>
+</head>
+<body>
+<h1>403</h1>
+<h>Freeze, this is the Spring Security</h>
+<h5>Error 403: "The server understood the request, but is refusing to authorize it."</h5>
+<h5>Сервер понял запрос, но отказывается его авторизовать.</h5>
+<br/>
+<p>Вернуться на главную страницу
+<form action="#" th:action="@{/login}" method="get">
+    <p><input type="submit" value="back"/></p>
+</form>
+</body>
+</html>

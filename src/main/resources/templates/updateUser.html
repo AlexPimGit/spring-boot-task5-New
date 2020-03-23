@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="#" th:action="@{/admin/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+    <label for="name">Name</label>
+    <input type="text" th:field="*{name}" id="name" placeholder="Name">
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    <label for="userPassword">Password</label>
+    <input type="userPassword" th:field="*{userPassword}" id="userPassword" placeholder="Password">
+    <span th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></span>
+    <label for="position">Position</label>
+    <input type="text" th:field="*{position}" id="position" placeholder="Position">
+    <span th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></span>
+    <label for="age">Age</label>
+    <input type="text" th:field="*{age}" id="age" placeholder="Age">
+    <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="Email">
+    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    <input type="submit" value="Update User">
+</form>
+</body>
+</html>

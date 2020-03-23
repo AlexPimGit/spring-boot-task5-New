@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>welcome</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="${message} + '!'"></p>
+<p th:text="'defaultValue for Message = '+${message}"></p>
+<br>
+<p th:text="${greeting}+${they}">
+<p/>
+<a th:href="@{/login}">Login</a>
+<br><br>
+<a th:href="@{/403}">403</a>
+<br><br>
+<div th:switch="${users}">
+    <h2 th:case="null">No users yet!</h2>
+    <div th:case="*">
+        <h2>Users</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Password</th>
+                <th>Position</th>
+                <th>Age</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user:${users}">
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.userPassword}"></td>
+                <td th:text="${user.position}"></td>
+                <td th:text="${user.age}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.roles}"></td>
+                <td><a th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</a></td>
+                <td><a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Добавить пользователя
+        <form action="#" th:action="@{/admin/addUser}" method="get">
+    <p><input type="submit" value="add"/></p>
+    </form>
+</div>
+<p>Выйти
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>
