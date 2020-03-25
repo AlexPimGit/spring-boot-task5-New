@@ -42,11 +42,26 @@ public class UserController {
     }
 
     @GetMapping("/admin/welcome")
-    public String getWelcome(@RequestParam(name = "message", required = false, defaultValue = "Aloha") String message, Model model) {
+    public String getWelcome(@RequestParam(name = "message", required = false,
+            defaultValue = "Aloha") String message,
+                             Model model,
+                             @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
+                             @RequestParam(value = "roleUser", required = false) String roleUser
+    ) {
         model.addAttribute("message", message);
         model.addAttribute("greeting", "Hola, ");
         model.addAttribute("they", "Amigos");
         model.addAttribute("users", userService.listUser());
+        model.addAttribute("roles", roleService.listRole());
+
+        if (roleAdmin != null) {
+            if (roleAdmin.equalsIgnoreCase("admin")) {
+                model.addAttribute("status", "OK");
+            }
+        } else {
+            model.addAttribute("status", "Not ok");
+        }
+
         return "welcome";
     }
 
@@ -56,17 +71,19 @@ public class UserController {
     }
 
     @PostMapping("/admin/addUser")
-    public String addUser(@Valid User user, @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
-                          @RequestParam(value = "roleUser", required = false) String roleUser, BindingResult result, Model model) {
+    public String addUser(@Valid User user, Role role,
+                          @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
+                          @RequestParam(value = "roleUser", required = false) String roleUser,
+                          BindingResult result, Model model
+    ) {
         if (result.hasErrors()) {// если не прошел Valid - заново
             return "addUser";
         }
-        String[] roles = {"roleAdmin", "roleUser"};
-//        Set<Role> roles = createRoleSet(roleAdmin, roleUser);
-      //  User user = new User();
+
+
         userService.addUser(user);
         model.addAttribute("users", userService.listUser());
-        return "/user";
+        return "/welcome";
     }
 
     @GetMapping("/admin/edit/{id}")
