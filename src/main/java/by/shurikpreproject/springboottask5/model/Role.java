@@ -3,6 +3,7 @@ package by.shurikpreproject.springboottask5.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", unique = true)
     private String name;
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)//подумать зачем МтуМ, заменить
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     public Role() {
     }

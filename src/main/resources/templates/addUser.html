@@ -5,19 +5,20 @@
     <meta charset="utf-8"/>
     <title>Add User</title>
 </head>
-<body>
+<body style = "background-color: khaki">
 <div align="center">
     <h1>Add User</h1>
     <br/>
     <form action="#" th:action="@{/admin/addUser}" th:object="${user}" method="post">
-        <table border="0" cellpadding="10">
+        <hr>
+        <table border="2" cellpadding="10" >
             <tr>
                 <td>Name:</td>
                 <td><input type="text" th:field="*{name}"/></td>
             </tr>
             <tr>
                 <td>Password:</td>
-                <td><input type="password" th:field="*{userPassword}"/></td>
+                <td><input type="password" th:field="*{userPassword}" placeholder = "Password"/></td>
             </tr>
             <tr>
                 <td>Position:</td>
@@ -34,11 +35,8 @@
             <tr>
                 <td>Role:</td>
                 <td>
-
-
-                    <input type="checkbox" name="roleAdmin" value="ADMIN">admin<br>
-
-                    <input type="checkbox" name="roleUser" value="USER">user<br>
+                    <input type="checkbox" name="roleAdmin" value="ADMIN" checked>admin <br>
+                    <input type="checkbox" name="roleUser" value="User" checked>user <br>
                 </td>
             </tr>
             <tr>

@@ -9,19 +9,24 @@
 <form action="#" th:action="@{/admin/update/{id}(id=${user.id})}" th:object="${user}" method="post">
     <label for="name">Name</label>
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
-    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span><br>
     <label for="userPassword">Password</label>
     <input type="userPassword" th:field="*{userPassword}" id="userPassword" placeholder="Password">
-    <span th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></span>
+    <span th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></span><br>
     <label for="position">Position</label>
     <input type="text" th:field="*{position}" id="position" placeholder="Position">
-    <span th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></span>
+    <span th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></span><br>
     <label for="age">Age</label>
     <input type="text" th:field="*{age}" id="age" placeholder="Age">
-    <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+    <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span><br>
     <label for="email">Email</label>
     <input type="text" th:field="*{email}" id="email" placeholder="Email">
-    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span><br>
+
+    <input th:each="role:${roles}">
+
+        <label><input type="checkbox" th:text="${role}" ></label>
+
     <input type="submit" value="Update User">
 </form>
 </body>

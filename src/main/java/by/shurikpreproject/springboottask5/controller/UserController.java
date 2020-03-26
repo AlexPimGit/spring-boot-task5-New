@@ -42,8 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/admin/welcome")
-    public String getWelcome(@RequestParam(name = "message", required = false,
-            defaultValue = "Aloha") String message,
+    public String getWelcome(@RequestParam(name = "message", required = false, defaultValue = "Aloha") String message,
                              Model model,
                              @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
                              @RequestParam(value = "roleUser", required = false) String roleUser
@@ -51,17 +50,20 @@ public class UserController {
         model.addAttribute("message", message);
         model.addAttribute("greeting", "Hola, ");
         model.addAttribute("they", "Amigos");
-        model.addAttribute("users", userService.listUser());
-        model.addAttribute("roles", roleService.listRole());
+        model.addAttribute("roleAdmin", roleAdmin);//кладем параметр roleAdmin в модель
+        model.addAttribute("roleUser", roleUser);
 
         if (roleAdmin != null) {
             if (roleAdmin.equalsIgnoreCase("admin")) {
-                model.addAttribute("status", "OK");
+                model.addAttribute("status", "OKadmin");
+            }
+            if (roleUser.equalsIgnoreCase("user")) {
+                model.addAttribute("status", "OKuser");
             }
         } else {
             model.addAttribute("status", "Not ok");
         }
-
+        model.addAttribute("users", userService.listUser());
         return "welcome";
     }
 
@@ -71,16 +73,18 @@ public class UserController {
     }
 
     @PostMapping("/admin/addUser")
-    public String addUser(@Valid User user, Role role,
+    public String addUser(@Valid User user,
+                          //берем из формы параметр "roleAdmin", необязательный (false)
                           @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
                           @RequestParam(value = "roleUser", required = false) String roleUser,
-                          BindingResult result, Model model
-    ) {
+                          BindingResult result,
+                          Model model) {
         if (result.hasErrors()) {// если не прошел Valid - заново
             return "addUser";
         }
-
-
+        model.addAttribute("roleAdmin", roleAdmin);//кладем параметр roleAdmin в модель для отображения в виде (в рамках этого метода)
+        model.addAttribute("roleUser", roleUser);
+        Set<Role> roles = createRoleSet(roleAdmin,roleUser);
         userService.addUser(user);
         model.addAttribute("users", userService.listUser());
         return "/welcome";
@@ -102,6 +106,7 @@ public class UserController {
 
         userService.updateUser(user);
         model.addAttribute("users", userService.listUser());
+        model.addAttribute("roles", roleService.listRole());
         return "welcome";
     }
 
@@ -112,12 +117,13 @@ public class UserController {
         return "welcome";
     }
 
-//    private Set<Role> createRoleSet(String... roleName) {
-//        return Stream.of(roleName).
-//                filter(Objects::nonNull).
-//                map(roleService::getRoleByName).
-//                filter(Optional::isPresent).
-//                map(Optional::get).
-//                collect(Collectors.toSet());
-//    }
+    private Set<Role> createRoleSet(String ... roleName) {
+        return Stream.of(roleName).
+                filter(Objects::nonNull).
+                map(roleService::getRoleByName).
+                filter(Optional::isPresent).
+                map(Optional::get).
+                collect(Collectors.toSet());
+    }
+
 }
