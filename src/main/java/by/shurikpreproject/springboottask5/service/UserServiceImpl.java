@@ -32,15 +32,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUser(User user) {
         user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
-//        user.setRoles(new HashSet<>(roleDao.listRole()));
-//        List roles = roleDao.listRole();
-////        roles.add(new Role("ADMIN"));
-//        user.setRoles(roles);
         userDao.addUser(user);
     }
 
     @Override
     public void updateUser(User user) {
+        user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
         userDao.updateUser(user);
     }
 

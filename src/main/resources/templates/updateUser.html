@@ -11,7 +11,7 @@
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
     <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span><br>
     <label for="userPassword">Password</label>
-    <input type="userPassword" th:field="*{userPassword}" id="userPassword" placeholder="Password">
+    <input type="password" th:field="*{userPassword}" id="userPassword" placeholder="Password">
     <span th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></span><br>
     <label for="position">Position</label>
     <input type="text" th:field="*{position}" id="position" placeholder="Position">
@@ -22,10 +22,17 @@
     <label for="email">Email</label>
     <input type="text" th:field="*{email}" id="email" placeholder="Email">
     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span><br>
-
-    <input th:each="role:${roles}">
-
-        <label><input type="checkbox" th:text="${role}" ></label>
+    <div>
+        <label>Role:</label><br>
+        <label>
+            <input type="checkbox" name="roleAdmin" value="admin"
+                   th:if="${preRoles.contains('ADMIN')}" checked>
+        </label> admin <br>
+        <label>
+            <input type="checkbox" name="roleUser" value="user"
+                   th:if="${preRoles.contains('USER')}" checked>
+        </label> user <br>
+    </div>
 
     <input type="submit" value="Update User">
 </form>

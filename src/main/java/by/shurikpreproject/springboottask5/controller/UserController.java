@@ -82,9 +82,8 @@ public class UserController {
         if (result.hasErrors()) {// если не прошел Valid - заново
             return "addUser";
         }
-        model.addAttribute("roleAdmin", roleAdmin);//кладем параметр roleAdmin в модель для отображения в виде (в рамках этого метода)
-        model.addAttribute("roleUser", roleUser);
-        Set<Role> roles = createRoleSet(roleAdmin,roleUser);
+        Set<Role> roles = createRoleSet(roleAdmin, roleUser);//result
+        user.setRoles(roles);
         userService.addUser(user);
         model.addAttribute("users", userService.listUser());
         return "/welcome";
@@ -92,21 +91,25 @@ public class UserController {
 
     @GetMapping("/admin/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+        User user = userService.getUserById(id);//берем юзера из базы
+        Set<String> preRoles = new HashSet<>();//рыба ролей
+        user.getRoles().forEach(e -> preRoles.add(e.getName()));//кладем в рыбу каждую существующую роль юзера
+        model.addAttribute("user", user);
+        model.addAttribute("preRoles", preRoles);// отображаем в виде рыбу с ролями
         return "updateUser";
     }
 
     @PostMapping("/admin/update/{id}")
-    public String updateUser(@PathVariable("id") long id, @Valid User user,
-                             BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            user.setId(id);
-            return "updateUser";
-        }
+    public String updateUser(@Valid User user,
+                             Model model,
+                             @PathVariable("id") Long id,
+                             @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
+                             @RequestParam(value = "roleUser", required = false) String roleUser) {
 
+        Set<Role> roles = createRoleSet(roleAdmin, roleUser);
+        user.setRoles(roles);
         userService.updateUser(user);
         model.addAttribute("users", userService.listUser());
-        model.addAttribute("roles", roleService.listRole());
         return "welcome";
     }
 
@@ -117,13 +120,16 @@ public class UserController {
         return "welcome";
     }
 
-    private Set<Role> createRoleSet(String ... roleName) {
-        return Stream.of(roleName).
-                filter(Objects::nonNull).
-                map(roleService::getRoleByName).
-                filter(Optional::isPresent).
-                map(Optional::get).
-                collect(Collectors.toSet());
+    private Set<Role> createRoleSet(String roleAdmin, String roleUser) {
+        Set<String> setRole = new HashSet<>();//preResult
+        setRole.add(roleAdmin);
+        setRole.add(roleUser);
+        setRole.removeIf(Objects::isNull);
+        Set<Role> roles = new HashSet<>();
+        Iterator<String> itr = setRole.iterator();
+        while (itr.hasNext()) {
+            itr.forEachRemaining(roleName -> roles.add(roleService.getRoleByName(roleName)));
+        }
+        return roles;
     }
-
 }

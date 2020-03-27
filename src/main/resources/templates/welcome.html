@@ -10,7 +10,8 @@
 <p th:text="${status}"> Status</p>
 <p th:text="'defaultValue for Message = '+${message}"></p>
 <br>
-<p th:text="${greeting}+${they}"><p/>
+<p th:text="${greeting}+${they}">
+<p/>
 <a th:href="@{/login}">Login</a>
 <br><br>
 <a th:href="@{/403}">403</a>
@@ -19,7 +20,7 @@
     <h2 th:case="null">No users yet!</h2>
     <div th:case="*">
         <h2>Users</h2>
-        <table border = "1">
+        <table border="1">
             <thead>
             <tr>
                 <th>Name</th>
@@ -30,8 +31,6 @@
                 <th>Role</th>
                 <th>Edit</th>
                 <th>Delete</th>
-                <th>paramAdmin</th>
-                <th>paramUser</th>
             </tr>
             </thead>
             <tbody>
@@ -41,12 +40,10 @@
                 <td th:text="${user.position}"></td>
                 <td th:text="${user.age}"></td>
                 <td th:text="${user.email}"></td>
-<!--                следующая строчка с разделителем ", "-->
+                <!--               внимание, следующая строчка с разделителем ", "-->
                 <td><span th:text="${#strings.arrayJoin(user.roles,', ')}"></span></td>
                 <td><a th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</a></td>
                 <td><a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a></td>
-                <td th:text="${roleAdmin}"></td>
-                <td th:text="${roleUser}"></td>
             </tr>
             </tbody>
         </table>
