@@ -24,14 +24,14 @@
     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span><br>
     <div>
         <label>Role:</label><br>
-        <label>
+        <label>admin
             <input type="checkbox" name="roleAdmin" value="admin"
                    th:if="${preRoles.contains('ADMIN')}" checked>
-        </label> admin <br>
-        <label>
+        </label><br>
+        <label>user
             <input type="checkbox" name="roleUser" value="user"
                    th:if="${preRoles.contains('USER')}" checked>
-        </label> user <br>
+        </label>
     </div>
 
     <input type="submit" value="Update User">

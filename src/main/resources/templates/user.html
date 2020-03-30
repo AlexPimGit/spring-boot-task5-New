@@ -10,7 +10,7 @@
 <div th:switch="${user}">
     <h2 th:case="null">No user yet!</h2>
     <div th:case="*">
-        <img th:src="@{images/10.jpg}" alt="user-nichosi" width="200" height="200" title="ничоси">
+        <img th:src="@{/images/10.jpg}" alt="user-nichosi" width="200" height="200" title="ничоси">
         <h4>User</h4>
         <table border = "1">
             <thead>
@@ -39,7 +39,6 @@
         <br>
     </div>
 </div>
-<p th:text="${status}"> Status</p>
 <p>Выйти
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>

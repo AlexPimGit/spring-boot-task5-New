@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>Add User</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body style = "background-color: khaki">
 <div align="center">
@@ -11,7 +12,7 @@
     <br/>
     <form action="#" th:action="@{/admin/addUser}" th:object="${user}" method="post">
         <hr>
-        <table border="2" cellpadding="10" >
+        <table>
             <tr>
                 <td>Name:</td>
                 <td><input type="text" th:field="*{name}"/></td>

@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 public class UserController {
@@ -29,42 +29,30 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user", method = RequestMethod.GET)
-    public Model getUserPage(Model model) {
+    public ModelAndView getUserPage() {
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("user", userService.findByUsername(authUser.getName()));
-        return model;
+        return new ModelAndView("user", "user", userService.findByUsername(authUser.getName()));
     }
 
-    @RequestMapping("/user/{id}")
-    public String showUserForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "user";
+//    @RequestMapping("/user/{id}")
+//    public String showUserForm(@PathVariable("id") Long id, Model model) {
+//        model.addAttribute("user", userService.getUserById(id));
+//        return "user";
+//    }
+
+    @GetMapping("/admin/getAllUsers")
+    public ModelAndView getAllUsers() {
+        return new ModelAndView("welcome", "users", userService.listUser());
     }
 
     @GetMapping("/admin/welcome")
-    public String getWelcome(@RequestParam(name = "message", required = false, defaultValue = "Aloha") String message,
-                             Model model,
-                             @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
+    public String getWelcome(ModelMap modelMap,
+                             @RequestParam(value = "roleAdmin", required = false) String roleAdmin,//
                              @RequestParam(value = "roleUser", required = false) String roleUser
     ) {
-        model.addAttribute("message", message);
-        model.addAttribute("greeting", "Hola, ");
-        model.addAttribute("they", "Amigos");
-        model.addAttribute("roleAdmin", roleAdmin);//кладем параметр roleAdmin в модель
-        model.addAttribute("roleUser", roleUser);
-
-        if (roleAdmin != null) {
-            if (roleAdmin.equalsIgnoreCase("admin")) {
-                model.addAttribute("status", "OKadmin");
-            }
-            if (roleUser.equalsIgnoreCase("user")) {
-                model.addAttribute("status", "OKuser");
-            }
-        } else {
-            model.addAttribute("status", "Not ok");
-        }
-        model.addAttribute("users", userService.listUser());
-        return "welcome";
+        modelMap.addAttribute("roleAdmin", roleAdmin);//кладем параметр roleAdmin в модель
+        modelMap.addAttribute("roleUser", roleUser);
+        return "redirect:/admin/getAllUsers";
     }
 
     @GetMapping("/admin/addUser")
@@ -85,8 +73,7 @@ public class UserController {
         Set<Role> roles = createRoleSet(roleAdmin, roleUser);//result
         user.setRoles(roles);
         userService.addUser(user);
-        model.addAttribute("users", userService.listUser());
-        return "/welcome";
+        return "redirect:/admin/getAllUsers";
     }
 
     @GetMapping("/admin/edit/{id}")
@@ -99,25 +86,23 @@ public class UserController {
         return "updateUser";
     }
 
-    @PostMapping("/admin/update/{id}")
+    @PostMapping("/admin/update/")
     public String updateUser(@Valid User user,
                              Model model,
-                             @PathVariable("id") Long id,
+//                             @PathVariable("id") Long id,
                              @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
                              @RequestParam(value = "roleUser", required = false) String roleUser) {
 
         Set<Role> roles = createRoleSet(roleAdmin, roleUser);
         user.setRoles(roles);
         userService.updateUser(user);
-        model.addAttribute("users", userService.listUser());
-        return "welcome";
+        return "redirect:/admin/getAllUsers";
     }
 
     @GetMapping("/admin/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
         userService.removeUser(id);
-        model.addAttribute("users", userService.listUser());
-        return "welcome";
+        return "redirect:/admin/getAllUsers";
     }
 
     private Set<Role> createRoleSet(String roleAdmin, String roleUser) {
