@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>user</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
 </head>
 <body>
 <div th:switch="${user}">
@@ -12,7 +13,7 @@
     <div th:case="*">
         <img th:src="@{/images/10.jpg}" alt="user-nichosi" width="200" height="200" title="ничоси">
         <h4>User</h4>
-        <table border = "1">
+        <table>
             <thead>
             <tr>
                 <th><i>Name</i></th>

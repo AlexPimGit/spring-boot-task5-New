@@ -78,21 +78,26 @@ public class UserController {
 
     @GetMapping("/admin/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
-        User user = userService.getUserById(id);//берем юзера из базы
+        User user = userService.getUserById(id);//берем юзера из базы по id из юрла
         Set<String> preRoles = new HashSet<>();//рыба ролей
         user.getRoles().forEach(e -> preRoles.add(e.getName()));//кладем в рыбу каждую существующую роль юзера
-        model.addAttribute("user", user);
+        model.addAttribute("user", user); // заносим из базы юзера
         model.addAttribute("preRoles", preRoles);// отображаем в виде рыбу с ролями
-        return "updateUser";
+        return "updateUser";//отображаем форму для изма
     }
 
-    @PostMapping("/admin/update/")
-    public String updateUser(@Valid User user,
+    @PostMapping("/admin/update/{id}")
+    public String updateUser(@PathVariable("id") Long id,
+                             @Valid User user,
+                             BindingResult result,
                              Model model,
-//                             @PathVariable("id") Long id,
                              @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
                              @RequestParam(value = "roleUser", required = false) String roleUser) {
 
+        if (result.hasErrors()) {
+            user.setId(id);
+            return "updateUser";
+        }
         Set<Role> roles = createRoleSet(roleAdmin, roleUser);
         user.setRoles(roles);
         userService.updateUser(user);
@@ -100,7 +105,7 @@ public class UserController {
     }
 
     @GetMapping("/admin/delete/{id}")
-    public String deleteUser(@PathVariable("id") long id, Model model) {
+    public String deleteUser(@PathVariable("id") long id) {
         userService.removeUser(id);
         return "redirect:/admin/getAllUsers";
     }

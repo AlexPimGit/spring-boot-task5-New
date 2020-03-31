@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
 <form action="#" th:action="@{/admin/update/{id}(id=${user.id})}" th:object="${user}" method="post">
@@ -25,12 +26,16 @@
     <div>
         <label>Role:</label><br>
         <label>admin
-            <input type="checkbox" name="roleAdmin" value="admin"
-                   th:if="${preRoles.contains('ADMIN')}" checked>
-        </label><br>
+        <input type="checkbox" name="roleAdmin" value="admin"
+               th:if="${preRoles.contains('ADMIN')}" checked>
+        <input type="checkbox" name="roleAdmin" value="admin"
+               th:unless="${preRoles.contains('ADMIN')}">
+    </label>
         <label>user
             <input type="checkbox" name="roleUser" value="user"
                    th:if="${preRoles.contains('USER')}" checked>
+            <input type="checkbox" name="roleUser" value="user"
+                   th:unless="${preRoles.contains('USER')}">
         </label>
     </div>
 
