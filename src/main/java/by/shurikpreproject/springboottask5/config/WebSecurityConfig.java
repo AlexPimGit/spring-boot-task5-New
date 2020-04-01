@@ -63,9 +63,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers("/", "/home", "/static/css/**").permitAll()
+                .antMatchers("/", "/home").permitAll()
                 //Все остальные страницы требуют аутентификации
                 .anyRequest().authenticated();
+        http.httpBasic();
     }
     //для отображения css на общедоступных страницах
     @Override
@@ -77,4 +78,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/fonts/**");
         web.ignoring().antMatchers("/vendor/**");
     }
+
 }

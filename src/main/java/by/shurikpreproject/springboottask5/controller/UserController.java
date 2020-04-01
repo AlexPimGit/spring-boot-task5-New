@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -34,12 +37,6 @@ public class UserController {
         return new ModelAndView("user", "user", userService.findByUsername(authUser.getName()));
     }
 
-//    @RequestMapping("/user/{id}")
-//    public String showUserForm(@PathVariable("id") Long id, Model model) {
-//        model.addAttribute("user", userService.getUserById(id));
-//        return "user";
-//    }
-
     @GetMapping("/admin/getAllUsers")
     public ModelAndView getAllUsers() {
         return new ModelAndView("welcome", "users", userService.listUser());
@@ -56,8 +53,8 @@ public class UserController {
     }
 
     @GetMapping("/admin/addUser")
-    public String showAddForm(User user) {
-        return "addUser";
+    public ModelAndView showAddForm() {
+        return new ModelAndView("addUser", "user", new User());
     }
 
     @PostMapping("/admin/addUser")
@@ -65,8 +62,7 @@ public class UserController {
                           //берем из формы параметр "roleAdmin", необязательный (false)
                           @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
                           @RequestParam(value = "roleUser", required = false) String roleUser,
-                          BindingResult result,
-                          Model model) {
+                          BindingResult result) {
         if (result.hasErrors()) {// если не прошел Valid - заново
             return "addUser";
         }
@@ -90,7 +86,6 @@ public class UserController {
     public String updateUser(@PathVariable("id") Long id,
                              @Valid User user,
                              BindingResult result,
-                             Model model,
                              @RequestParam(value = "roleAdmin", required = false) String roleAdmin,
                              @RequestParam(value = "roleUser", required = false) String roleUser) {
 
